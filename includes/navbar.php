@@ -37,8 +37,5 @@
       <i class="fa-solid fa-circle-user me-1"></i> Hello, Guest! 
       <a href="#" class="text-primary fw-bold text-decoration-none ms-2">Login / Sign Up</a>
     </small>
-    <small class="text-muted d-none d-md-block">
-      <i class="fa-solid fa-truck-fast me-1"></i> Free Shipping on orders over $50
-    </small>
   </div>
 </div>

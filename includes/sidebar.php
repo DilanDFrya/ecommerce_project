@@ -1,4 +1,4 @@
-<div class="col-md-3">
+<aside class="col-md-3">
     <!-- Brands Section -->
     <div class="sidebar-card">
         <h5 class="sidebar-title"><i class="fa-solid fa-truck-fast me-2"></i> Delivery Brands</h5>
@@ -30,4 +30,4 @@
             </a>
         </div>
     </div>
-</div>
+</aside>

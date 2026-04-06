@@ -3,23 +3,11 @@
 
 <main class="container py-5">
     <div class="row">
+        <!-- Sidebar Section -->
+        <?php include('includes/sidebar.php'); ?>
+
         <!-- Main Content Area -->
         <div class="col-md-9">
-            <!-- Hero Section -->
-            <section class="hero-section text-start">
-                <div class="row align-items-center">
-                    <div class="col-lg-7 py-5 px-lg-5">
-                        <span class="badge bg-primary px-3 py-2 mb-4">Summer Collection 2026</span>
-                        <h1 class="display-3 fw-bold mb-4">Discover the Next <span class="text-primary">Generation</span> of Tech</h1>
-                        <p class="lead mb-5">Experience high-performance computing and premium devices designed for the modern lifestyle. Shop the latest laptops and smartphones with free worldwide delivery.</p>
-                        <div class="d-flex gap-3">
-                            <a href="#" class="btn btn-primary btn-lg px-5 py-3 shadow-lg">Shop Now <i class="fa-solid fa-arrow-right ms-2"></i></a>
-                            <a href="#" class="btn btn-outline-secondary btn-lg px-5 py-3">Learn More</a>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <!-- Featured Products -->
             <div class="d-flex justify-content-between align-items-end mb-4">
                 <div>
@@ -98,9 +86,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Sidebar Section -->
-        <?php include('includes/sidebar.php'); ?>
     </div>
 </main>
 
