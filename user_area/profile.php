@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="card border-0 shadow-sm p-5" style="border-radius: 30px;">
                 <div class="mb-4 text-center">
-                    <img src="images/phone.png" class="rounded-circle border border-primary p-1 mb-3 shadow-sm" width="120" height="120" alt="Profile">
+                    <img src="<?php echo $path_prefix; ?>images/Profile.webp" class="rounded-circle border border-primary p-1 mb-3 shadow-sm" width="120" height="120" alt="Profile">
                     <h2 class="fw-bold mb-1">User DashBoard</h2>
                     <p class="text-muted">Manage your orders and personal information</p>
                 </div>
@@ -36,7 +36,7 @@
                 </div>
                 
                 <div class="d-grid gap-2 mt-5">
-                    <a href="../index.php" class="btn btn-outline-primary btn-lg rounded-3">Return to Home</a>
+                    <a href="<?php echo $path_prefix; ?>index.php" class="btn btn-outline-primary btn-lg rounded-3">Return to Home</a>
                 </div>
             </div>
         </div>

@@ -56,8 +56,8 @@
         </div>
 
         <!-- Summary -->
-        <div class="col-lg-4">
-            <div class="bg-white rounded-5 shadow-sm p-5 sticky-top" style="top: 100px;">
+        <aside class="col-lg-4">
+            <div class="bg-white rounded-5 shadow-sm p-5 sticky-top" style="top: 120px; z-index: 900;">
                 <h4 class="fw-bold mb-4">Summary</h4>
                 <div class="d-flex justify-content-between mb-3 text-muted small">
                     <p class="mb-0">Subtotal</p>
