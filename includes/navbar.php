@@ -1,6 +1,7 @@
+<?php $active_page = basename($_SERVER['PHP_SELF']); ?>
 <nav class="navbar navbar-expand-lg glass-nav py-3">
   <div class="container">
-    <a class="navbar-brand d-flex align-items-center" href="#">
+    <a class="navbar-brand d-flex align-items-center" href="index.php">
       <i class="fa-solid fa-shop me-2"></i> MODERN STORE
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -8,10 +9,28 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-4">
-        <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Shop</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Categories</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        <li class="nav-item">
+          <a class="nav-link <?php echo ($active_page == 'index.php') ? 'active' : ''; ?>" aria-current="page" href="index.php">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <?php echo ($active_page == 'products.php') ? 'active' : ''; ?>" href="products.php">Shop</a>
+        </li>
+        <!-- Categories Dropdown -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Categories
+          </a>
+          <ul class="dropdown-menu border-0 shadow-lg p-3" style="border-radius: 15px;" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item rounded-3 mb-1" href="products.php?category=Electronics">Electronics</a></li>
+            <li><a class="dropdown-item rounded-3 mb-1" href="products.php?category=Smartphones">Smartphones</a></li>
+            <li><a class="dropdown-item rounded-3 mb-1" href="products.php?category=Laptops">Laptops</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item rounded-3" href="products.php">View All Categories</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <?php echo ($active_page == 'contact.php') ? 'active' : ''; ?>" href="contact.php">Contact</a>
+        </li>
       </ul>
       
       <div class="d-flex align-items-center">
@@ -20,10 +39,10 @@
           <input type="text" placeholder="Search products...">
         </div>
         
-        <a href="#" class="nav-link me-3"><i class="fa-solid fa-user"></i></a>
-        <a href="#" class="btn btn-primary position-relative px-4">
+        <a href="user_area/profile.php" class="nav-link me-3 <?php echo ($active_page == 'profile.php') ? 'active' : ''; ?>" title="Profile"><i class="fa-solid fa-user"></i></a>
+        <a href="cart.php" class="btn btn-primary position-relative px-4">
           <i class="fa-solid fa-cart-shopping me-2"></i> Cart
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">1</span>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">0</span>
         </a>
       </div>
     </div>
@@ -32,10 +51,12 @@
 
 <!-- Sub-Navbar / Greeting -->
 <div class="bg-white border-bottom py-2">
-  <div class="container d-flex justify-content-between align-items-center">
-    <small class="text-muted">
-      <i class="fa-solid fa-circle-user me-1"></i> Hello, Guest! 
-      <a href="#" class="text-primary fw-bold text-decoration-none ms-2">Login / Sign Up</a>
-    </small>
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <small class="text-muted">
+        <i class="fa-solid fa-circle-user me-1"></i> Hello, Guest! 
+        <a href="user_area/user_login.php" class="text-primary fw-bold text-decoration-none ms-2">Login / Sign Up</a>
+      </small>
+    </div>
   </div>
 </div>
