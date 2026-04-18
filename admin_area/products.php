@@ -9,9 +9,9 @@ if(isset($_POST['insert_product'])){
     $product_price = $_POST['p_price'];
     $product_status = "true";
 
-    $product_image1 = $_FILES['p_image1']['name'];
-    $product_image2 = $_FILES['p_image2']['name'];
-    $product_image3 = $_FILES['p_image3']['name'];
+    $product_image1 = str_replace(' ', '_', $_FILES['p_image1']['name']);
+    $product_image2 = str_replace(' ', '_', $_FILES['p_image2']['name']);
+    $product_image3 = str_replace(' ', '_', $_FILES['p_image3']['name']);
 
     $temp_image1 = $_FILES['p_image1']['tmp_name'];
     $temp_image2 = $_FILES['p_image2']['tmp_name'];
@@ -129,8 +129,15 @@ if(isset($_POST['insert_product'])){
                             <label for="category_id" class="form-label text-muted ms-1"><small>Category</small></label>
                             <select name="category_id" id="category_id" class="form-select border-0 bg-light py-2" required>
                                 <option value="">Select a Category</option>
-                                <option value="1">Category 1</option>
-                                <option value="2">Category 2</option>
+                                <?php
+                                $select_query = "SELECT * FROM `categories`";
+                                $result_query = mysqli_query($con, $select_query);
+                                while($row = mysqli_fetch_assoc($result_query)){
+                                    $category_title = $row['category_title'];
+                                    $category_id = $row['category_id'];
+                                    echo "<option value='$category_id'>$category_title</option>";
+                                }
+                                ?>
                             </select>
                         </div>
                         
@@ -138,8 +145,15 @@ if(isset($_POST['insert_product'])){
                             <label for="brand_id" class="form-label text-muted ms-1"><small>Brand</small></label>
                             <select name="brand_id" id="brand_id" class="form-select border-0 bg-light py-2" required>
                                 <option value="">Select a Brand</option>
-                                <option value="1">Brand 1</option>
-                                <option value="2">Brand 2</option>
+                                <?php
+                                $select_query = "SELECT * FROM `brands`";
+                                $result_query = mysqli_query($con, $select_query);
+                                while($row = mysqli_fetch_assoc($result_query)){
+                                    $brand_title = $row['brand_title'];
+                                    $brand_id = $row['brand_id'];
+                                    echo "<option value='$brand_id'>$brand_title</option>";
+                                }
+                                ?>
                             </select>
                         </div>
                     </div>
@@ -160,7 +174,7 @@ if(isset($_POST['insert_product'])){
                     </div>
                     
                     <div class="form-floating mb-4">
-                        <input type="text" name="p_price" id="p_price" class="form-control" placeholder="Enter product price" autocomplete="off" required>
+                        <input type="number" name="p_price" id="p_price" class="form-control" placeholder="Enter product price" autocomplete="off" required>
                         <label for="p_price" class="form-label">Product price</label>
                     </div>
                     
