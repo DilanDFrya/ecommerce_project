@@ -55,6 +55,8 @@ include('../config/db.php');
             <?php 
                 if(isset($_GET['products'])){
                     include('products.php');
+                } else if(isset($_GET['delete_product'])){
+                    include('delete_product.php');
                 } else {
             ?>
             <div class="container">
