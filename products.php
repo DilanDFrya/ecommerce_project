@@ -14,22 +14,62 @@
                     <h1 class="fw-bold mb-1">Our <span class="text-primary">Products</span></h1>
                     <p class="text-muted mb-0">Browse through our curated collection of tech devices</p>
                 </div>
-                <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle px-4 py-2 rounded-3 border" type="button" data-bs-toggle="dropdown">
-                        Sort By: Default
-                    </button>
-                    <ul class="dropdown-menu border-0 shadow-sm">
-                        <li><a class="dropdown-item" href="#">Price: Low to High</a></li>
-                        <li><a class="dropdown-item" href="#">Price: High to Low</a></li>
-                        <li><a class="dropdown-item" href="#">Newest First</a></li>
-                    </ul>
+                
+                <?php
+                // Handle sorting logic
+                $sort_query = "ORDER BY p_id DESC"; // Default
+                $sort_title = "Newest First";
+                if(isset($_GET['sort'])){
+                    if($_GET['sort'] == 'price_low'){
+                        $sort_query = "ORDER BY p_price ASC";
+                        $sort_title = "Price: Low to High";
+                    } else if($_GET['sort'] == 'price_high'){
+                        $sort_query = "ORDER BY p_price DESC";
+                        $sort_title = "Price: High to Low";
+                    }
+                }
+
+                // Build current URL for sorting links to maintain existing filters
+                $current_url = "products.php?";
+                if(isset($_GET['category'])){
+                    $current_url .= "category=" . $_GET['category'] . "&";
+                } else if(isset($_GET['brand'])){
+                    $current_url .= "brand=" . $_GET['brand'] . "&";
+                }
+                ?>
+
+                <div class="d-flex gap-3">
+                    <?php if(isset($_GET['category']) || isset($_GET['brand']) || isset($_GET['sort'])): ?>
+                        <a href="products.php" class="btn btn-outline-danger px-3 py-2 rounded-3 border d-flex align-items-center">
+                            <i class="fa-solid fa-xmark me-2"></i> Reset
+                        </a>
+                    <?php endif; ?>
+                    
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle px-4 py-2 rounded-3 border d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+                            Sort By: <?php echo $sort_title; ?>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm mt-2">
+                            <li><a class="dropdown-item py-2" href="<?php echo $current_url; ?>sort=price_low">Price: Low to High</a></li>
+                            <li><a class="dropdown-item py-2" href="<?php echo $current_url; ?>sort=price_high">Price: High to Low</a></li>
+                            <li><a class="dropdown-item py-2" href="<?php echo $current_url; ?>sort=newest">Newest First</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
             <div class="row g-4">
                 <?php
                 if (isset($con)) {
-                    $select_query = "SELECT * FROM products ORDER BY rand()";
+                    if(isset($_GET['category'])){
+                        $category_id = intval($_GET['category']);
+                        $select_query = "SELECT * FROM products WHERE category_id = $category_id $sort_query";
+                    } else if(isset($_GET['brand'])){
+                        $brand_id = intval($_GET['brand']);
+                        $select_query = "SELECT * FROM products WHERE brand_id = $brand_id $sort_query";
+                    } else {
+                        $select_query = "SELECT * FROM products $sort_query";
+                    }
                     $result_query = mysqli_query($con, $select_query);
                     if ($result_query && mysqli_num_rows($result_query) > 0) {
                         while($row = mysqli_fetch_assoc($result_query)){

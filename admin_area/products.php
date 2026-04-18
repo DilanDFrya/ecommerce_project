@@ -219,10 +219,75 @@ if(isset($_GET['delete_product'])){
                                 <td class='text-primary fw-bold'>$<?php echo $product_price; ?></td>
                                 <td class='text-muted small'><?php echo $formatted_date; ?></td>
                                 <td class='px-4 text-end'>
-                                    <a href='#' data-bs-toggle='modal' data-bs-target='#editProductModal<?php echo $product_id; ?>' class='btn btn-sm btn-outline-secondary me-1'><i class='fa-solid fa-pen-to-square'></i></a>
-                                    <a href='index.php?products&delete_product=<?php echo $product_id; ?>' class='btn btn-sm btn-outline-danger' onclick="event.preventDefault(); Swal.fire({title: 'Are you sure?', text: 'You won\'t be able to revert this!', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Yes, delete it!'}).then((result) => { if (result.isConfirmed) { window.location.href = this.href; } });"><i class='fa-solid fa-trash'></i></a>
+                                    <a href='#' data-bs-toggle='modal' data-bs-target='#viewProductModal<?php echo $product_id; ?>' class='btn btn-sm btn-outline-info me-1' title='View Details'><i class='fa-solid fa-eye'></i></a>
+                                    <a href='#' data-bs-toggle='modal' data-bs-target='#editProductModal<?php echo $product_id; ?>' class='btn btn-sm btn-outline-secondary me-1' title='Edit Product'><i class='fa-solid fa-pen-to-square'></i></a>
+                                    <a href='index.php?products&delete_product=<?php echo $product_id; ?>' class='btn btn-sm btn-outline-danger' title='Delete Product' onclick="event.preventDefault(); Swal.fire({title: 'Are you sure?', text: 'You won\'t be able to revert this!', icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Yes, delete it!'}).then((result) => { if (result.isConfirmed) { window.location.href = this.href; } });"><i class='fa-solid fa-trash'></i></a>
                                 </td>
                             </tr>
+
+                            <!-- View Modal for Product <?php echo $product_id; ?> -->
+                            <div class="modal fade" id="viewProductModal<?php echo $product_id; ?>" tabindex="-1" aria-hidden="true" style="text-align: left;">
+                                <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                                    <div class="modal-content border-0 shadow">
+                                        <div class="modal-header border-bottom-0 bg-light">
+                                            <h5 class="modal-title fw-bold">Product Details</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body p-4 pt-3">
+                                            <div class="row mb-4">
+                                                <div class="col-md-4 text-center">
+                                                    <img src="./product_images/<?php echo $product_image1; ?>" class="img-fluid rounded mb-2 shadow-sm" style="height: 200px; object-fit: cover; width: 100%;">
+                                                    <span class="text-muted small">Image 1 (Main)</span>
+                                                </div>
+                                                <div class="col-md-4 text-center">
+                                                    <?php if(!empty($product_image2)): ?>
+                                                        <img src="./product_images/<?php echo $product_image2; ?>" class="img-fluid rounded mb-2 shadow-sm" style="height: 200px; object-fit: cover; width: 100%;">
+                                                        <span class="text-muted small">Image 2</span>
+                                                    <?php else: ?>
+                                                        <div class="bg-light rounded d-flex align-items-center justify-content-center mb-2" style="height: 200px; width: 100%;">
+                                                            <span class="text-muted small">No Image 2</span>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="col-md-4 text-center">
+                                                    <?php if(!empty($product_image3)): ?>
+                                                        <img src="./product_images/<?php echo $product_image3; ?>" class="img-fluid rounded mb-2 shadow-sm" style="height: 200px; object-fit: cover; width: 100%;">
+                                                        <span class="text-muted small">Image 3</span>
+                                                    <?php else: ?>
+                                                        <div class="bg-light rounded d-flex align-items-center justify-content-center mb-2" style="height: 200px; width: 100%;">
+                                                            <span class="text-muted small">No Image 3</span>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                            
+                                            <h4 class="fw-bold mb-3"><?php echo $product_title; ?></h4>
+                                            <h5 class="text-primary fw-bold mb-3">$<?php echo $product_price; ?></h5>
+                                            
+                                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                                <?php
+                                                    $cat_name = "Unknown";
+                                                    foreach($categories_array as $c) { if($c['category_id'] == $category_id) $cat_name = $c['category_title']; }
+                                                    $brand_name = "Unknown";
+                                                    foreach($brands_array as $b) { if($b['brand_id'] == $brand_id) $brand_name = $b['brand_title']; }
+                                                ?>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2"><i class="fa-solid fa-layer-group me-1"></i> <?php echo $cat_name; ?></span>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2"><i class="fa-solid fa-tag me-1"></i> <?php echo $brand_name; ?></span>
+                                                <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2"><i class="fa-solid fa-calendar me-1"></i> Added: <?php echo $formatted_date; ?></span>
+                                            </div>
+                                            
+                                            <h6 class="fw-bold">Description</h6>
+                                            <p class="text-muted bg-light p-3 rounded" style="white-space: pre-wrap;"><?php echo $product_description; ?></p>
+                                            
+                                            <h6 class="fw-bold">Keywords</h6>
+                                            <p class="text-muted bg-light p-3 rounded"><?php echo $product_keywords; ?></p>
+                                        </div>
+                                        <div class="modal-footer border-top-0 pt-0">
+                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- Edit Modal for Product <?php echo $product_id; ?> -->
                             <div class="modal fade" id="editProductModal<?php echo $product_id; ?>" tabindex="-1" aria-hidden="true" style="text-align: left;">
@@ -253,31 +318,53 @@ if(isset($_GET['delete_product'])){
                                                 
                                                 <div class="row">
                                                     <div class="col-md-6 mb-3">
-                                                        <label for="e_category_id<?php echo $product_id; ?>" class="form-label text-muted ms-1"><small>Category</small></label>
-                                                        <select name="category_id" id="e_category_id<?php echo $product_id; ?>" class="form-select border-0 bg-light py-2" required>
+                                                        <label class="form-label text-muted ms-1"><small>Category</small></label>
+                                                        <div class="dropdown custom-select-dropdown">
                                                             <?php
+                                                            $current_cat_title = "Select Category";
                                                             foreach($categories_array as $cat){
-                                                                $cat_title = $cat['category_title'];
-                                                                $cat_id = $cat['category_id'];
-                                                                $selected = ($cat_id == $category_id) ? 'selected' : '';
-                                                                echo "<option value='$cat_id' $selected>$cat_title</option>";
+                                                                if($cat['category_id'] == $category_id) $current_cat_title = $cat['category_title'];
                                                             }
                                                             ?>
-                                                        </select>
+                                                            <button class="btn btn-light w-100 text-start d-flex justify-content-between align-items-center border-0 py-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span><?php echo $current_cat_title; ?></span>
+                                                                <i class="fa-solid fa-chevron-down ms-2 opacity-50 small"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu w-100 border-0 shadow-sm mt-1" style="max-height: 200px; overflow-y: auto;">
+                                                                <?php
+                                                                foreach($categories_array as $cat){
+                                                                    $active = ($cat['category_id'] == $category_id) ? 'active bg-light text-primary fw-bold' : '';
+                                                                    echo "<li><a class='dropdown-item py-2 custom-select-item $active' href='#' data-value='".$cat['category_id']."'>".$cat['category_title']."</a></li>";
+                                                                }
+                                                                ?>
+                                                            </ul>
+                                                            <input type="hidden" name="category_id" value="<?php echo $category_id; ?>" required>
+                                                        </div>
                                                     </div>
                                                     
                                                     <div class="col-md-6 mb-3">
-                                                        <label for="e_brand_id<?php echo $product_id; ?>" class="form-label text-muted ms-1"><small>Brand</small></label>
-                                                        <select name="brand_id" id="e_brand_id<?php echo $product_id; ?>" class="form-select border-0 bg-light py-2" required>
+                                                        <label class="form-label text-muted ms-1"><small>Brand</small></label>
+                                                        <div class="dropdown custom-select-dropdown">
                                                             <?php
+                                                            $current_br_title = "Select Brand";
                                                             foreach($brands_array as $brand){
-                                                                $br_title = $brand['brand_title'];
-                                                                $br_id = $brand['brand_id'];
-                                                                $selected = ($br_id == $brand_id) ? 'selected' : '';
-                                                                echo "<option value='$br_id' $selected>$br_title</option>";
+                                                                if($brand['brand_id'] == $brand_id) $current_br_title = $brand['brand_title'];
                                                             }
                                                             ?>
-                                                        </select>
+                                                            <button class="btn btn-light w-100 text-start d-flex justify-content-between align-items-center border-0 py-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                <span><?php echo $current_br_title; ?></span>
+                                                                <i class="fa-solid fa-chevron-down ms-2 opacity-50 small"></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu w-100 border-0 shadow-sm mt-1" style="max-height: 200px; overflow-y: auto;">
+                                                                <?php
+                                                                foreach($brands_array as $brand){
+                                                                    $active = ($brand['brand_id'] == $brand_id) ? 'active bg-light text-primary fw-bold' : '';
+                                                                    echo "<li><a class='dropdown-item py-2 custom-select-item $active' href='#' data-value='".$brand['brand_id']."'>".$brand['brand_title']."</a></li>";
+                                                                }
+                                                                ?>
+                                                            </ul>
+                                                            <input type="hidden" name="brand_id" value="<?php echo $brand_id; ?>" required>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -361,27 +448,39 @@ if(isset($_GET['delete_product'])){
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="category_id" class="form-label text-muted ms-1"><small>Category</small></label>
-                            <select name="category_id" id="category_id" class="form-select border-0 bg-light py-2" required>
-                                <option value="">Select a Category</option>
-                                <?php
-                                foreach($categories_array as $cat){
-                                    echo "<option value='".$cat['category_id']."'>".$cat['category_title']."</option>";
-                                }
-                                ?>
-                            </select>
+                            <label class="form-label text-muted ms-1"><small>Category</small></label>
+                            <div class="dropdown custom-select-dropdown">
+                                <button class="btn btn-light w-100 text-start d-flex justify-content-between align-items-center border-0 py-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span>Select a Category</span>
+                                    <i class="fa-solid fa-chevron-down ms-2 opacity-50 small"></i>
+                                </button>
+                                <ul class="dropdown-menu w-100 border-0 shadow-sm mt-1" style="max-height: 200px; overflow-y: auto;">
+                                    <?php
+                                    foreach($categories_array as $cat){
+                                        echo "<li><a class='dropdown-item py-2 custom-select-item' href='#' data-value='".$cat['category_id']."'>".$cat['category_title']."</a></li>";
+                                    }
+                                    ?>
+                                </ul>
+                                <input type="hidden" name="category_id" value="" required>
+                            </div>
                         </div>
                         
                         <div class="col-md-6 mb-3">
-                            <label for="brand_id" class="form-label text-muted ms-1"><small>Brand</small></label>
-                            <select name="brand_id" id="brand_id" class="form-select border-0 bg-light py-2" required>
-                                <option value="">Select a Brand</option>
-                                <?php
-                                foreach($brands_array as $brand){
-                                    echo "<option value='".$brand['brand_id']."'>".$brand['brand_title']."</option>";
-                                }
-                                ?>
-                            </select>
+                            <label class="form-label text-muted ms-1"><small>Brand</small></label>
+                            <div class="dropdown custom-select-dropdown">
+                                <button class="btn btn-light w-100 text-start d-flex justify-content-between align-items-center border-0 py-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span>Select a Brand</span>
+                                    <i class="fa-solid fa-chevron-down ms-2 opacity-50 small"></i>
+                                </button>
+                                <ul class="dropdown-menu w-100 border-0 shadow-sm mt-1" style="max-height: 200px; overflow-y: auto;">
+                                    <?php
+                                    foreach($brands_array as $brand){
+                                        echo "<li><a class='dropdown-item py-2 custom-select-item' href='#' data-value='".$brand['brand_id']."'>".$brand['brand_title']."</a></li>";
+                                    }
+                                    ?>
+                                </ul>
+                                <input type="hidden" name="brand_id" value="" required>
+                            </div>
                         </div>
                     </div>
 
@@ -414,3 +513,59 @@ if(isset($_GET['delete_product'])){
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Use event delegation for dynamically generated edit modals
+    document.body.addEventListener('click', function(e) {
+        if(e.target.closest('.custom-select-item')) {
+            e.preventDefault();
+            const item = e.target.closest('.custom-select-item');
+            const val = item.getAttribute('data-value');
+            const text = item.innerText;
+            
+            // Find container
+            const container = item.closest('.custom-select-dropdown');
+            
+            // Update hidden input
+            container.querySelector('input[type="hidden"]').value = val;
+            
+            // Update button text
+            container.querySelector('button span').innerText = text;
+            
+            // Remove active classes
+            container.querySelectorAll('.custom-select-item').forEach(el => {
+                el.classList.remove('active', 'bg-light', 'text-primary', 'fw-bold');
+            });
+            
+            // Add active class to clicked item
+            item.classList.add('active', 'bg-light', 'text-primary', 'fw-bold');
+        }
+    });
+
+    // Form submission validation to ensure hidden inputs are filled
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const hiddenInputs = form.querySelectorAll('input[type="hidden"][required]');
+            let isValid = true;
+            hiddenInputs.forEach(input => {
+                if(!input.value) {
+                    isValid = false;
+                    const btn = input.parentElement.querySelector('button');
+                    btn.classList.add('border', 'border-danger');
+                    setTimeout(() => btn.classList.remove('border', 'border-danger'), 3000);
+                }
+            });
+            if(!isValid) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Fields',
+                    text: 'Please select a Category and Brand'
+                });
+            }
+        });
+    });
+});
+</script>

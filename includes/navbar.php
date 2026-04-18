@@ -15,19 +15,7 @@
         <li class="nav-item">
           <a class="nav-link <?php echo ($active_page == 'products.php') ? 'active' : ''; ?>" href="<?php echo $path_prefix; ?>products.php">Shop</a>
         </li>
-        <!-- Categories Dropdown -->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Categories
-          </a>
-          <ul class="dropdown-menu border-0 shadow-lg p-3" style="border-radius: 15px;" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item rounded-3 mb-1" href="<?php echo $path_prefix; ?>products.php?category=Electronics">Electronics</a></li>
-            <li><a class="dropdown-item rounded-3 mb-1" href="<?php echo $path_prefix; ?>products.php?category=Smartphones">Smartphones</a></li>
-            <li><a class="dropdown-item rounded-3 mb-1" href="<?php echo $path_prefix; ?>products.php?category=Laptops">Laptops</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item rounded-3" href="<?php echo $path_prefix; ?>products.php">View All Categories</a></li>
-          </ul>
-        </li>
+
         <li class="nav-item">
           <a class="nav-link <?php echo ($active_page == 'contact.php') ? 'active' : ''; ?>" href="<?php echo $path_prefix; ?>contact.php">Contact</a>
         </li>
