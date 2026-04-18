@@ -8,7 +8,7 @@
             
             <ul class="nav flex-column mb-auto px-3 gap-1">
                 <li class="nav-item">
-                    <a href="index.php" class="nav-link rounded-3 <?php if(!isset($_GET['products'])) echo 'active'; else echo 'text-secondary'; ?>" style="transition: all 0.3s; <?php if(!isset($_GET['products'])) echo 'background: rgba(13, 202, 240, 0.15); color: #0dcaf0; border-left: 4px solid #0dcaf0; font-weight: 600;'; ?>">
+                    <a href="index.php" class="nav-link rounded-3 <?php if(!isset($_GET['products']) && !isset($_GET['categories']) && !isset($_GET['brands'])) echo 'active'; else echo 'text-secondary'; ?>" style="transition: all 0.3s; <?php if(!isset($_GET['products']) && !isset($_GET['categories']) && !isset($_GET['brands'])) echo 'background: rgba(13, 202, 240, 0.15); color: #0dcaf0; border-left: 4px solid #0dcaf0; font-weight: 600;'; ?>">
                         <i class="fa-solid fa-gauge-high me-3 opacity-75"></i> Dashboard
                     </a>
                 </li>
@@ -21,12 +21,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link rounded-3 text-secondary" style="transition: all 0.3s;">
+                    <a href="index.php?categories" class="nav-link rounded-3 <?php if(isset($_GET['categories'])) echo 'active'; else echo 'text-secondary'; ?>" style="transition: all 0.3s; <?php if(isset($_GET['categories'])) echo 'background: rgba(13, 202, 240, 0.15); color: #0dcaf0; border-left: 4px solid #0dcaf0; font-weight: 600;'; ?>">
                         <i class="fa-solid fa-layer-group me-3 opacity-75"></i> Categories
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link rounded-3 text-secondary" style="transition: all 0.3s;">
+                    <a href="index.php?brands" class="nav-link rounded-3 <?php if(isset($_GET['brands'])) echo 'active'; else echo 'text-secondary'; ?>" style="transition: all 0.3s; <?php if(isset($_GET['brands'])) echo 'background: rgba(13, 202, 240, 0.15); color: #0dcaf0; border-left: 4px solid #0dcaf0; font-weight: 600;'; ?>">
                         <i class="fa-solid fa-tag me-3 opacity-75"></i> Brands
                     </a>
                 </li>
