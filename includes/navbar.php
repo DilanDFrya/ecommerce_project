@@ -42,8 +42,16 @@
   <div class="container">
     <div class="d-flex justify-content-between align-items-center">
       <small class="text-muted">
-        <i class="fa-solid fa-circle-user me-1"></i> Hello, Guest! 
-        <a href="<?php echo $path_prefix; ?>user_area/user_login.php" class="text-primary fw-bold text-decoration-none ms-2">Login / Sign Up</a>
+        <i class="fa-solid fa-circle-user me-1"></i> 
+        <?php
+        if(!isset($_SESSION['username'])){
+            echo "Hello, Guest! ";
+            echo "<a href='".$path_prefix."user_area/user_login.php' class='text-primary fw-bold text-decoration-none ms-2'>Login / Sign Up</a>";
+        } else {
+            echo "Welcome, " . htmlspecialchars($_SESSION['username']) . "! ";
+            echo "<a href='".$path_prefix."user_area/logout.php' class='text-danger fw-bold text-decoration-none ms-2'>Logout</a>";
+        }
+        ?>
       </small>
     </div>
   </div>

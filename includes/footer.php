@@ -45,6 +45,33 @@
     </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<?php if(isset($_SESSION['toast_msg']) && isset($_SESSION['toast_status'])): ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+        Toast.fire({
+            icon: '<?php echo $_SESSION['toast_status']; ?>',
+            title: '<?php echo $_SESSION['toast_msg']; ?>'
+        });
+    });
+    </script>
+<?php 
+    unset($_SESSION['toast_msg']);
+    unset($_SESSION['toast_status']);
+endif; 
+?>
 </body>
 </html>

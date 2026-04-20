@@ -1,4 +1,7 @@
 <?php 
+  if(session_status() === PHP_SESSION_NONE) {
+      session_start();
+  }
   // Dynamic path detection to handle subdirectories (like user_area/)
   $is_user_area = (basename(dirname($_SERVER['PHP_SELF'])) == 'user_area');
   $path_prefix = ($is_user_area) ? '../' : './';

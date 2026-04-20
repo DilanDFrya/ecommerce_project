@@ -1,4 +1,33 @@
-<?php include('../includes/header.php'); ?>
+<?php 
+include('../includes/header.php'); 
+include('../config/db.php');
+
+if(isset($_POST['user_login'])) {
+    $user_username = mysqli_real_escape_string($con, $_POST['user_username']);
+    $user_password = $_POST['user_password'];
+
+    $select_query = "SELECT * FROM user_table WHERE username='$user_username'";
+    $result = mysqli_query($con, $select_query);
+    $row_count = mysqli_num_rows($result);
+    $row_data = mysqli_fetch_assoc($result);
+
+    if($row_count > 0) {
+        if(password_verify($user_password, $row_data['user_password'])) {
+            $_SESSION['username'] = $user_username;
+            $_SESSION['toast_status'] = 'success';
+            $_SESSION['toast_msg'] = 'Login successful';
+            header("Location: ../index.php");
+            exit();
+        } else {
+            $_SESSION['toast_status'] = 'error';
+            $_SESSION['toast_msg'] = 'Invalid Credentials';
+        }
+    } else {
+        $_SESSION['toast_status'] = 'error';
+        $_SESSION['toast_msg'] = 'Invalid Credentials';
+    }
+}
+?>
 <?php include('../includes/navbar.php'); ?>
 
 <div class="container py-5 my-5">
