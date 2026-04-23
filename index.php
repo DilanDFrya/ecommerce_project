@@ -97,9 +97,18 @@
                                     <h5 class='card-title mb-2 fw-bold text-truncate'>$product_title</h5>
                                     <p class='text-muted small mb-3 text-truncate'>$product_description</p>
                                     <h4 class='text-primary fw-bold mb-4'>$$product_price</h4>
-                                    <div class='d-grid gap-2'>
-                                        <a href='index.php?add_to_cart=$product_id' class='btn btn-primary rounded-pill'><i class='fa-solid fa-cart-plus me-2'></i> Add to cart</a>
-                                        <a href='product_details.php?product_id=$product_id' class='btn btn-light rounded-pill text-muted small border'>View Details</a>
+                                    <div class='d-grid gap-2'>";
+                                        
+                                        if(is_product_in_cart($con, $product_id)) {
+                                            echo "<a href='cart.php' class='btn btn-success rounded-pill'><i class='fa-solid fa-check me-2'></i> Already in cart</a>";
+                                        } else {
+                                            $request_uri = $_SERVER['REQUEST_URI'];
+                                            $separator = (strpos($request_uri, '?') !== false) ? '&' : '?';
+                                            $add_cart_url = $request_uri . $separator . "add_to_cart=" . $product_id;
+                                            echo "<a href='$add_cart_url' class='btn btn-primary rounded-pill'><i class='fa-solid fa-cart-plus me-2'></i> Add to cart</a>";
+                                        }
+
+                                        echo "<a href='product_details.php?product_id=$product_id' class='btn btn-light rounded-pill text-muted small border'>View Details</a>
                                     </div>
                                 </div>
                             </div>

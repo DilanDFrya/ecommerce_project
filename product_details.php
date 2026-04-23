@@ -79,9 +79,20 @@
                         </div>
                         
                         <div class="d-grid gap-3 d-md-flex mt-auto pt-4 border-top">
-                            <a href="index.php?add_to_cart=<?php echo $product_id; ?>" class="btn btn-primary btn-lg px-5 shadow-sm rounded-pill d-flex align-items-center justify-content-center">
-                                <i class="fa-solid fa-cart-plus me-2"></i> Add to Cart
-                            </a>
+                            <?php
+                            if(is_product_in_cart($con, $product_id)) {
+                                echo "<a href='cart.php' class='btn btn-success btn-lg px-5 shadow-sm rounded-pill d-flex align-items-center justify-content-center'>
+                                    <i class='fa-solid fa-check me-2'></i> Already in Cart
+                                </a>";
+                            } else {
+                                $request_uri = $_SERVER['REQUEST_URI'];
+                                $separator = (strpos($request_uri, '?') !== false) ? '&' : '?';
+                                $add_cart_url = $request_uri . $separator . "add_to_cart=" . $product_id;
+                                echo "<a href='$add_cart_url' class='btn btn-primary btn-lg px-5 shadow-sm rounded-pill d-flex align-items-center justify-content-center'>
+                                    <i class='fa-solid fa-cart-plus me-2'></i> Add to Cart
+                                </a>";
+                            }
+                            ?>
                             <a href="products.php" class="btn btn-light btn-lg px-4 rounded-pill border d-flex align-items-center justify-content-center text-muted">
                                 <i class="fa-solid fa-arrow-left me-2"></i> Back to Shop
                             </a>

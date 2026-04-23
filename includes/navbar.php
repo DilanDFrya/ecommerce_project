@@ -33,7 +33,7 @@
         <a href="<?php echo $path_prefix; ?>user_area/profile.php" class="nav-link me-3 <?php echo ($active_page == 'profile.php') ? 'active' : ''; ?>" title="Profile"><i class="fa-solid fa-user"></i></a>
         <a href="<?php echo $path_prefix; ?>cart.php" class="btn btn-primary position-relative px-4">
           <i class="fa-solid fa-cart-shopping me-2"></i> Cart
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;">0</span>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem;"><?php echo cart_item_count($con); ?></span>
         </a>
       </div>
     </div>

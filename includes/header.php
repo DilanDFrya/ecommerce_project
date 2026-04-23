@@ -5,6 +5,12 @@
   // Dynamic path detection to handle subdirectories (like user_area/)
   $is_user_area = (basename(dirname($_SERVER['PHP_SELF'])) == 'user_area');
   $path_prefix = ($is_user_area) ? '../' : './';
+  
+  require_once($path_prefix . 'config/db.php');
+  require_once($path_prefix . 'includes/common_functions.php');
+  
+  // Call global cart logic
+  cart($con, $path_prefix);
 ?>
 <!DOCTYPE html>
 <html lang="en">
