@@ -159,6 +159,150 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+// AJAX Add to Cart Logic
+document.addEventListener('click', function(e) {
+    const addToCartBtn = e.target.closest('a[href*="add_to_cart="]');
+    if (addToCartBtn) {
+        // Check if it's already in cart (has btn-success class)
+        if (addToCartBtn.classList.contains('btn-success')) {
+            return; // Normal navigation to cart.php
+        }
+
+        e.preventDefault();
+        const url = addToCartBtn.getAttribute('href');
+
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update Navbar Cart Count
+            const cartBadge = document.getElementById('cartCountBadge');
+            if (cartBadge && data.count !== undefined) {
+                cartBadge.innerText = data.count;
+            }
+
+            // Show Toast
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+
+            Toast.fire({
+                icon: data.status,
+                title: data.msg
+            });
+
+            // If success or info (already in cart), update button UI
+            if (data.status === 'success' || data.status === 'info') {
+                addToCartBtn.classList.remove('btn-primary');
+                addToCartBtn.classList.add('btn-success');
+                addToCartBtn.innerHTML = '<i class="fa-solid fa-check me-2"></i> Already in cart';
+                addToCartBtn.setAttribute('href', 'cart.php');
+            }
+
+            // Handle redirect if not logged in
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        })
+        .catch(error => {
+            console.error('Error adding to cart:', error);
+            // Fallback: normal navigation if AJAX fails
+            window.location.href = url;
+        });
+    }
+});
+// AJAX Cart Management Logic (for cart.php)
+document.addEventListener('click', function(e) {
+    const cartActionBtn = e.target.closest('.cart-action');
+    if (cartActionBtn) {
+        e.preventDefault();
+        const url = cartActionBtn.getAttribute('href');
+        const urlParts = url.split('?');
+        if (urlParts.length < 2) return;
+        
+        const urlParams = new URLSearchParams(urlParts[1]);
+        const productId = urlParams.get('id');
+        const action = urlParams.get('action');
+
+        // Function to perform the actual update
+        const performUpdate = () => {
+            fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update Navbar Cart Count
+                    const cartBadge = document.getElementById('cartCountBadge');
+                    if (cartBadge) cartBadge.innerText = data.cart_count;
+
+                    if (data.removed) {
+                        // Remove the row from the table
+                        const row = document.getElementById(`product-row-${productId}`);
+                        if (row) {
+                            row.style.opacity = '0';
+                            setTimeout(() => {
+                                row.remove();
+                                if (data.cart_count == 0) {
+                                    location.reload();
+                                }
+                            }, 300);
+                        }
+                    } else {
+                        // Update Quantity and Row Total
+                        const qtyDisplay = document.getElementById(`qty-${productId}`);
+                        const itemTotal = document.getElementById(`item-total-${productId}`);
+                        if (qtyDisplay) qtyDisplay.innerText = data.new_qty;
+                        if (itemTotal) itemTotal.innerText = `$${data.item_total}`;
+                    }
+
+                    // Update Summary Totals
+                    const subtotalDisp = document.getElementById('cart-subtotal');
+                    const taxDisp = document.getElementById('cart-tax');
+                    const totalDisp = document.getElementById('cart-total');
+                    
+                    if (subtotalDisp) subtotalDisp.innerText = data.subtotal;
+                    if (taxDisp) taxDisp.innerText = data.tax;
+                    if (totalDisp) totalDisp.innerText = data.total;
+                }
+            })
+            .catch(error => {
+                console.error('Error managing cart:', error);
+                window.location.href = url;
+            });
+        };
+
+        // Show confirmation for delete action
+        if (action === 'remove') {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to remove this item from your cart?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, remove it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    performUpdate();
+                }
+            });
+        } else {
+            // Non-delete actions (inc/dec) proceed immediately
+            performUpdate();
+        }
+    }
+});
 </script>
 </body>
 </html>

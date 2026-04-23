@@ -3,8 +3,13 @@
 function cart($con, $path_prefix) {
     if(isset($_GET['add_to_cart'])) {
         $product_id = $_GET['add_to_cart'];
+        $is_ajax = (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest');
 
         if(!isset($_SESSION['username'])) {
+            if($is_ajax) {
+                echo json_encode(['status' => 'warning', 'msg' => 'Please log in to add items to your cart', 'redirect' => $path_prefix . 'user_area/user_login.php']);
+                exit();
+            }
             $_SESSION['toast_status'] = 'warning';
             $_SESSION['toast_msg'] = 'Please log in to add items to your cart';
             header("Location: ".$path_prefix."user_area/user_login.php");
@@ -17,19 +22,35 @@ function cart($con, $path_prefix) {
         $num_of_rows = mysqli_num_rows($result_query);
 
         if($num_of_rows > 0) {
+            if($is_ajax) {
+                echo json_encode(['status' => 'info', 'msg' => 'Item is already in your cart']);
+                exit();
+            }
             $_SESSION['toast_status'] = 'info';
             $_SESSION['toast_msg'] = 'Item is already in your cart';
             // Redirect back to the same page without the add_to_cart parameter
-            $url_parts = parse_url($_SERVER['REQUEST_URI']);
-            parse_str($url_parts['query'] ?? '', $query_params);
+            $query_params = $_GET;
             unset($query_params['add_to_cart']);
-            $redirect_url = $url_parts['path'] . (!empty($query_params) ? '?' . http_build_query($query_params) : '');
+            $redirect_url = $_SERVER['PHP_SELF'];
+            if (!empty($query_params)) {
+                $redirect_url .= '?' . http_build_query($query_params);
+            }
             header("Location: $redirect_url");
             exit();
         } else {
             $insert_query = "INSERT INTO cart_details (product_id, username, quantity) VALUES ($product_id, '$username', 1)";
             $result_query = mysqli_query($con, $insert_query);
             
+            if($is_ajax) {
+                if($result_query) {
+                    $count = cart_item_count($con); // Get updated count
+                    echo json_encode(['status' => 'success', 'msg' => 'Item added to your cart', 'count' => $count]);
+                } else {
+                    echo json_encode(['status' => 'error', 'msg' => 'Error adding item to cart']);
+                }
+                exit();
+            }
+
             if($result_query) {
                 $_SESSION['toast_status'] = 'success';
                 $_SESSION['toast_msg'] = 'Item added to your cart';
@@ -39,10 +60,12 @@ function cart($con, $path_prefix) {
             }
             
             // Redirect back to the same page without the add_to_cart parameter
-            $url_parts = parse_url($_SERVER['REQUEST_URI']);
-            parse_str($url_parts['query'] ?? '', $query_params);
+            $query_params = $_GET;
             unset($query_params['add_to_cart']);
-            $redirect_url = $url_parts['path'] . (!empty($query_params) ? '?' . http_build_query($query_params) : '');
+            $redirect_url = $_SERVER['PHP_SELF'];
+            if (!empty($query_params)) {
+                $redirect_url .= '?' . http_build_query($query_params);
+            }
             header("Location: $redirect_url");
             exit();
         }
