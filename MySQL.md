@@ -8,6 +8,11 @@ This document outlines the database schema for the E-Commerce platform. It inclu
 erDiagram
     CATEGORIES ||--o{ PRODUCTS : contains
     BRANDS ||--o{ PRODUCTS : manufactures
+    USER_TABLE ||--o{ CART_DETAILS : "owns items in"
+    PRODUCTS ||--o{ CART_DETAILS : "is in"
+    USER_TABLE ||--o{ USER_ORDERS : places
+    USER_ORDERS ||--o{ ORDER_ITEMS : contains
+    PRODUCTS ||--o{ ORDER_ITEMS : "is part of"
     
     CATEGORIES {
         int category_id PK "Auto Increment"
@@ -24,118 +29,104 @@ erDiagram
         varchar(100) p_title "Not Null"
         varchar(255) p_description "Not Null"
         varchar(255) p_keywords "Not Null"
-        int category_id FK "Cascade Delete"
-        int brand_id FK "Cascade Delete"
-        varchar(255) p_image1 "Main Image"
-        varchar(255) p_image2 "Secondary Image"
-        varchar(255) p_image3 "Tertiary Image"
-        int p_price "Not Null"
-        timestamp date "Auto Update"
-        varchar(100) status "Default: 'true'"
+        int category_id FK
+        int brand_id FK
+        varchar(255) p_image1
+        int p_price
+        varchar(100) status
+    }
+
+    USER_TABLE {
+        int user_id PK "Auto Increment"
+        varchar(100) username "Unique"
+        varchar(100) user_email "Unique"
+        varchar(255) user_password "Hashed"
+    }
+
+    CART_DETAILS {
+        int product_id FK
+        varchar(100) username FK
+        int quantity
+    }
+
+    USER_ORDERS {
+        int order_id PK "Auto Increment"
+        int user_id FK
+        int amount_due
+        int invoice_number
+        varchar(255) order_status
+    }
+
+    ORDER_ITEMS {
+        int item_id PK "Auto Increment"
+        int order_id FK
+        int product_id FK
+        int quantity
+        int price
     }
 ```
 
 ---
 
-## Database Initialization
-
-```sql
-CREATE DATABASE IF NOT EXISTS ecommerce_db;
-USE ecommerce_db;
-```
-
 ## Schema Definitions
 
-### 1. Categories Table
-Stores the structural hierarchy of product classifications. Must be created before the `products` table.
+### 1. Categories, Brands & Products
+Refer to `db.sql` for the core product management tables.
+
+### 2. User Table
+Stores registered customer information with hashed passwords.
 
 ```sql
-CREATE TABLE categories (
-    category_id INT(11) NOT NULL AUTO_INCREMENT,
-    category_title VARCHAR(100) NOT NULL,
-    PRIMARY KEY (category_id)
+CREATE TABLE IF NOT EXISTS user_table (
+    user_id INT(11) NOT NULL AUTO_INCREMENT,
+    username VARCHAR(100) NOT NULL,
+    user_email VARCHAR(100) NOT NULL,
+    user_password VARCHAR(255) NOT NULL,
+    user_address VARCHAR(255) NOT NULL,
+    user_contact VARCHAR(20) NOT NULL,
+    user_ip VARCHAR(100) NOT NULL,
+    PRIMARY KEY (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-### 2. Brands Table
-Stores the manufacturers or parent brands of the products. Must be created before the `products` table.
+### 3. Cart Details
+A persistence layer for the shopping cart. Uses a composite primary key of `(product_id, username)`.
 
 ```sql
-CREATE TABLE brands (
-    brand_id INT(11) NOT NULL AUTO_INCREMENT,
-    brand_title VARCHAR(100) NOT NULL,
-    PRIMARY KEY (brand_id)
+CREATE TABLE IF NOT EXISTS cart_details (
+  product_id INT(11) NOT NULL,
+  username VARCHAR(100) NOT NULL,
+  quantity INT(11) NOT NULL,
+  PRIMARY KEY (product_id, username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-### 3. Products Table
-The core table containing all inventory items. Utilizes foreign key constraints with `ON DELETE CASCADE` to ensure referential integrity; deleting a brand or category will automatically remove all associated products.
+### 4. User Orders
+Summarizes the final purchase, including total amount and payment status.
 
 ```sql
-CREATE TABLE products (
-    p_id INT(11) NOT NULL AUTO_INCREMENT,
-    p_title VARCHAR(100) NOT NULL,
-    p_description VARCHAR(255) NOT NULL,
-    p_keywords VARCHAR(255) NOT NULL,
-    category_id INT(11) NOT NULL,
-    brand_id INT(11) NOT NULL,
-    p_image1 VARCHAR(255) NOT NULL,
-    p_image2 VARCHAR(255) NOT NULL,
-    p_image3 VARCHAR(255) NOT NULL,
-    p_price INT(11) NOT NULL,
-    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    status VARCHAR(100) DEFAULT 'true',
-    PRIMARY KEY (p_id),
-    
-    CONSTRAINT fk_category FOREIGN KEY (category_id) 
-        REFERENCES categories(category_id) 
-        ON DELETE CASCADE ON UPDATE CASCADE,
-    
-    CONSTRAINT fk_brand FOREIGN KEY (brand_id) 
-        REFERENCES brands(brand_id) 
-        ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE IF NOT EXISTS user_orders (
+  order_id INT(11) NOT NULL AUTO_INCREMENT,
+  user_id INT(11) NOT NULL,
+  amount_due INT(11) NOT NULL,
+  invoice_number INT(11) NOT NULL,
+  total_products INT(11) NOT NULL,
+  order_date TIMESTAMP NOT NULL DEFAULT current_timestamp(),
+  order_status VARCHAR(255) NOT NULL,
+  PRIMARY KEY (order_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
----
+### 5. Order Items
+Stores a snapshot of each product purchased at the time of order placement.
 
-## Initial Seed Data
-
-Run these queries to populate the database with sample data for initial testing and development.
-
-### Seed Categories
 ```sql
-INSERT INTO categories (category_title) VALUES 
-('Laptops'), 
-('Mobiles'), 
-('Accessories'), 
-('Cameras');
-```
-
-### Seed Brands
-```sql
-INSERT INTO brands (brand_title) VALUES 
-('HP'), 
-('Apple'), 
-('Samsung'), 
-('Dell'), 
-('Sony');
-```
-
-### Seed Products
-```sql
-INSERT INTO products (p_title, p_description, p_keywords, category_id, brand_id, p_image1, p_image2, p_image3, p_price, status) 
-VALUES 
-(
-    'HP Pavilion Laptop', 
-    'High performance laptop for students', 
-    'hp, laptop, electronics', 
-    1, 
-    1, 
-    'hp_laptop.jpg', 
-    'hp_side.jpg', 
-    'hp_back.jpg', 
-    750, 
-    'true'
-);
+CREATE TABLE IF NOT EXISTS order_items (
+  item_id INT(11) NOT NULL AUTO_INCREMENT,
+  order_id INT(11) NOT NULL,
+  product_id INT(11) NOT NULL,
+  quantity INT(11) NOT NULL,
+  price INT(11) NOT NULL,
+  PRIMARY KEY (item_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
