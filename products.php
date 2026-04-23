@@ -11,8 +11,13 @@
         <div class="col-md-9 px-lg-4">
             <div class="d-flex justify-content-between align-items-center mb-5">
                 <div>
-                    <h1 class="fw-bold mb-1">Our <span class="text-primary">Products</span></h1>
-                    <p class="text-muted mb-0">Browse through our curated collection of tech devices</p>
+                    <?php if(isset($_GET['search'])): ?>
+                        <h1 class="fw-bold mb-1">Search Results for <span class="text-primary">"<?php echo htmlspecialchars($_GET['search']); ?>"</span></h1>
+                        <p class="text-muted mb-0">Products matching your search query</p>
+                    <?php else: ?>
+                        <h1 class="fw-bold mb-1">Our <span class="text-primary">Products</span></h1>
+                        <p class="text-muted mb-0">Browse through our curated collection of tech devices</p>
+                    <?php endif; ?>
                 </div>
                 
                 <?php
@@ -31,7 +36,9 @@
 
                 // Build current URL for sorting links to maintain existing filters
                 $current_url = "products.php?";
-                if(isset($_GET['category'])){
+                if(isset($_GET['search'])){
+                    $current_url .= "search=" . urlencode($_GET['search']) . "&";
+                } else if(isset($_GET['category'])){
                     $current_url .= "category=" . $_GET['category'] . "&";
                 } else if(isset($_GET['brand'])){
                     $current_url .= "brand=" . $_GET['brand'] . "&";
@@ -39,7 +46,7 @@
                 ?>
 
                 <div class="d-flex gap-3">
-                    <?php if(isset($_GET['category']) || isset($_GET['brand']) || isset($_GET['sort'])): ?>
+                    <?php if(isset($_GET['search']) || isset($_GET['category']) || isset($_GET['brand']) || isset($_GET['sort'])): ?>
                         <a href="products.php" class="btn btn-outline-danger px-3 py-2 rounded-3 border d-flex align-items-center">
                             <i class="fa-solid fa-xmark me-2"></i> Reset
                         </a>
@@ -61,7 +68,10 @@
             <div class="row g-4">
                 <?php
                 if (isset($con)) {
-                    if(isset($_GET['category'])){
+                    if(isset($_GET['search'])){
+                        $search_query = mysqli_real_escape_string($con, $_GET['search']);
+                        $select_query = "SELECT * FROM products WHERE p_title LIKE '%$search_query%' OR p_description LIKE '%$search_query%' $sort_query";
+                    } else if(isset($_GET['category'])){
                         $category_id = intval($_GET['category']);
                         $select_query = "SELECT * FROM products WHERE category_id = $category_id $sort_query";
                     } else if(isset($_GET['brand'])){

@@ -189,7 +189,7 @@ include('../config/db.php');
     <script>
         const Toast = Swal.mixin({
             toast: true,
-            position: 'top-end',
+            position: 'top',
             showConfirmButton: false,
             timer: 4000,
             timerProgressBar: true,

@@ -22,10 +22,13 @@
       </ul>
       
       <div class="d-flex align-items-center">
-        <div class="search-container me-3 d-none d-md-flex">
+        <form class="search-container me-3 d-none d-md-flex position-relative" action="<?php echo $path_prefix; ?>products.php" method="GET" id="searchForm">
           <i class="fa-solid fa-magnifying-glass text-muted"></i>
-          <input type="text" placeholder="Search products...">
-        </div>
+          <input type="text" name="search" id="searchInput" placeholder="Search products..." autocomplete="off">
+          <i class="fa-solid fa-xmark text-muted ms-2" id="clearSearch" style="cursor: pointer; display: none;" title="Clear search"></i>
+          <!-- Suggestions Dropdown -->
+          <div id="searchSuggestions" class="position-absolute bg-white shadow rounded mt-1 w-100 start-0" style="top: 100%; z-index: 1050; display: none; max-height: 400px; overflow-y: auto; overflow-x: hidden; border: 1px solid #eee;"></div>
+        </form>
         
         <a href="<?php echo $path_prefix; ?>user_area/profile.php" class="nav-link me-3 <?php echo ($active_page == 'profile.php') ? 'active' : ''; ?>" title="Profile"><i class="fa-solid fa-user"></i></a>
         <a href="<?php echo $path_prefix; ?>cart.php" class="btn btn-primary position-relative px-4">

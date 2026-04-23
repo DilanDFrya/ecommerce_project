@@ -53,7 +53,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const Toast = Swal.mixin({
             toast: true,
-            position: 'top-end',
+            position: 'top',
             showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true,
@@ -73,5 +73,92 @@
     unset($_SESSION['toast_status']);
 endif; 
 ?>
+
+<!-- Live Search Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchSuggestions = document.getElementById('searchSuggestions');
+    const clearSearch = document.getElementById('clearSearch');
+    let debounceTimer;
+
+    if (searchInput && searchSuggestions) {
+        if (clearSearch) {
+            clearSearch.addEventListener('click', function() {
+                searchInput.value = '';
+                this.style.display = 'none';
+                searchSuggestions.style.display = 'none';
+                searchInput.focus();
+            });
+        }
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(debounceTimer);
+            const query = this.value.trim();
+
+            if (clearSearch) {
+                clearSearch.style.display = query.length > 0 ? 'block' : 'none';
+            }
+
+            if (query.length < 2) {
+                searchSuggestions.style.display = 'none';
+                return;
+            }
+
+            debounceTimer = setTimeout(() => {
+                fetch(`<?php echo isset($path_prefix) ? $path_prefix : ''; ?>search_suggestions.php?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        searchSuggestions.innerHTML = '';
+                        if (data.length > 0) {
+                            let html = '<ul class="list-group list-group-flush m-0">';
+                            data.forEach(item => {
+                                html += `
+                                    <li class="list-group-item list-group-item-action d-flex align-items-center p-2">
+                                        <a href="<?php echo isset($path_prefix) ? $path_prefix : ''; ?>product_details.php?product_id=${item.id}" class="text-decoration-none text-dark d-flex align-items-center w-100">
+                                            <img src="<?php echo isset($path_prefix) ? $path_prefix : ''; ?>admin_area/product_images/${item.image}" alt="${item.title}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;" class="me-3">
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="fw-bold small text-truncate">${item.title}</div>
+                                                <div class="text-primary small fw-bold">$${item.price}</div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                `;
+                            });
+                            html += '</ul>';
+                            
+                            html += `
+                                <div class="p-2 border-top bg-light text-center">
+                                    <a href="<?php echo isset($path_prefix) ? $path_prefix : ''; ?>products.php?search=${encodeURIComponent(query)}" class="small text-primary text-decoration-none fw-bold">See all results</a>
+                                </div>
+                            `;
+                            
+                            searchSuggestions.innerHTML = html;
+                            searchSuggestions.style.display = 'block';
+                        } else {
+                            searchSuggestions.innerHTML = '<div class="p-3 text-muted small text-center">No products found</div>';
+                            searchSuggestions.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching suggestions:', error);
+                    });
+            }, 300);
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+                searchSuggestions.style.display = 'none';
+            }
+        });
+        
+        searchInput.addEventListener('focus', function() {
+            if (this.value.trim().length >= 2 && searchSuggestions.innerHTML !== '') {
+                searchSuggestions.style.display = 'block';
+            }
+        });
+    }
+});
+</script>
 </body>
 </html>

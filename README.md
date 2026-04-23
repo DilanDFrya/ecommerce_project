@@ -10,7 +10,7 @@ A fully functional, database-driven custom E-Commerce platform built from scratc
 - **Product Details (`product_details.php`)**: A dedicated page for deep-diving into a product, featuring an interactive multi-image gallery, full descriptions, and related products suggestions.
 - **Dynamic Navigation**: Both the top Navbar and the sidebars pull their data directly from the MySQL database in real time.
 
-### 🛡️ Admin Dashboard (`admin_area/`)
+### 🛡️ Admin Dashboard (`Admin_area/`)
 - **Real-Time Analytics (`index.php`)**: A summary dashboard displaying total counts of Active Products, Categories, and Brands, alongside a recent activity table.
 - **Full CRUD Management**: Create, Read, Update, and Delete capabilities for:
   - **Products**: Includes multi-image upload handling, custom UI dropdowns, and an instant "Quick View" modal.
